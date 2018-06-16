@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"grpc_demo/etcd-service-discovery/discovery"
+	"grpc-demo/etcd-service-discovery/discovery"
 )
 
 func main() {

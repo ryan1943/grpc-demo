@@ -1,7 +1,7 @@
 package main
 
 import (
-	"grpc_demo/helloworld/pb"
+	"grpc-demo/helloworld/pb"
 	"log"
 	"net"
 
