@@ -16,7 +16,7 @@ type Worker struct {
 	KeysAPI client.KeysAPI
 }
 
-// workerInfo is the service register information to etcd
+// WorkerInfo is the service register information to etcd
 type WorkerInfo struct {
 	Name string
 	IP   string
@@ -56,11 +56,11 @@ func (w *Worker) HeartBeat() {
 		value, _ := json.Marshal(info)
 
 		_, err := api.Set(context.Background(), key, string(value), &client.SetOptions{
-			TTL: time.Second * 10,
+			TTL: time.Second * 12,
 		})
 		if err != nil {
 			log.Println("Error update workerInfo:", err)
 		}
-		time.Sleep(time.Second * 12)
+		time.Sleep(time.Second * 5)
 	}
 }

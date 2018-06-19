@@ -10,6 +10,7 @@ import (
 	"github.com/coreos/etcd/client"
 )
 
+// Master is a role to maintain cluster membership information
 type Master struct {
 	members map[string]*Member
 	KeysAPI client.KeysAPI
@@ -23,6 +24,7 @@ type Member struct {
 	CPU     int
 }
 
+// NewMaster means create a master
 func NewMaster(endpoints []string) *Master {
 	cfg := client.Config{
 		Endpoints:               endpoints,
@@ -39,10 +41,11 @@ func NewMaster(endpoints []string) *Master {
 		members: make(map[string]*Member),
 		KeysAPI: client.NewKeysAPI(etcdClient),
 	}
-	go master.WatchWorkers()
+	//go master.WatchWorkers()
 	return master
 }
 
+// AddWorker means adding a member
 func (m *Master) AddWorker(info *WorkerInfo) {
 	member := &Member{
 		InGroup: true,
@@ -53,11 +56,13 @@ func (m *Master) AddWorker(info *WorkerInfo) {
 	m.members[member.Name] = member
 }
 
+// UpdateWorker means to join the group
 func (m *Master) UpdateWorker(info *WorkerInfo) {
 	member := m.members[info.Name]
 	member.InGroup = true
 }
 
+// NodeToWorkerInfo means to convert the value of node to WorkerInfo
 func NodeToWorkerInfo(node *client.Node) *WorkerInfo {
 	log.Println(node.Value)
 	info := &WorkerInfo{}
@@ -68,6 +73,7 @@ func NodeToWorkerInfo(node *client.Node) *WorkerInfo {
 	return info
 }
 
+// WatchWorkers means listening to workers
 func (m *Master) WatchWorkers() {
 	api := m.KeysAPI
 	watcher := api.Watcher("workers/", &client.WatcherOptions{
